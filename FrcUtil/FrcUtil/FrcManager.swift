@@ -39,6 +39,9 @@ class FrcManager {
             if fillColor == nil {
                 finalFillColor = view.backgroundColor ?? UIColor.clear
             }
+            else {
+                finalFillColor = fillColor!
+            }
             context.setFillColor(finalFillColor.cgColor)
             context.fill(roundedRect)
             context.setFillColor(bgColor.cgColor)
@@ -81,7 +84,11 @@ extension FrcManager {
         var b: CGFloat = 0
         var a: CGFloat = 0
         color.getRed(&r, green: &g, blue: &b, alpha: &a)
-        return "color\(r)\(g)\(b)\(a)"
+        let rStr = String.init(format: "%.5lf", r)
+        let gStr = String.init(format: "%.5lf", g)
+        let bStr = String.init(format: "%.5lf", b)
+        let aStr = String.init(format: "%.5lf", a)
+        return "color\(rStr)\(gStr)\(bStr)\(aStr)"
     }
     /// 获得圆角图层
     private func roundLayer() -> CALayer? {
@@ -98,7 +105,7 @@ extension FrcManager {
         let fillColorStr = colorString(fillColor ?? UIColor.clear)
         
         let fileName = cornerStr + radiusStr + bgColorStr + fillColorStr
-        return fileName.addingPercentEncoding(withAllowedCharacters: .uppercaseLetters)!
+        return fileName.replacingOccurrences(of: ".", with: "_")
     }
 }
 // MARK: - 文件相关操作
@@ -139,8 +146,12 @@ extension FrcManager {
     }
     
     private func saveImage(_ image:UIImage, name: String) {
-        let url = URL(fileURLWithPath: "\(basePath)/\(name)")
-        try! UIImagePNGRepresentation(image)?.write(to: url)
+        let url = URL(fileURLWithPath: "\(basePath)\(name)")
+        print("\(basePath)\(name)")
+        do {
+            try UIImagePNGRepresentation(image)?.write(to: url)
+        } catch {}
+        
         FrcCache.shared.cache(image: image, name: name)
     }
 }
