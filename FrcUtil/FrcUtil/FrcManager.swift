@@ -36,10 +36,7 @@ class FrcManager {
             guard let context = UIGraphicsGetCurrentContext() else { return }
             
             var finalFillColor: UIColor = UIColor.clear
-            if fillColor == nil {
-                finalFillColor = view.backgroundColor ?? UIColor.clear
-            }
-            else {
+            if fillColor != nil {
                 finalFillColor = fillColor!
             }
             context.setFillColor(finalFillColor.cgColor)
@@ -153,5 +150,6 @@ extension FrcManager {
         } catch {}
         
         FrcCache.shared.cache(image: image, name: name)
+        
     }
 }

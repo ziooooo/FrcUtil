@@ -10,15 +10,16 @@ import UIKit
 
 class FrcCache {
     static let shared = FrcCache()
-    private init() {}
-    
-    // MARK: - 缓存相关
-    private var imgCache = [String: UIImage]()
+    private let cache: NSCache<NSString, UIImage>!
+    private init() {
+        cache = NSCache<NSString, UIImage>()
+        cache.totalCostLimit = 5
+    }
     
     func cache(image: UIImage, name: String) {
-        imgCache[name] = image
+        cache.setObject(image, forKey: NSString(string: name))
     }
     func image(name: String) -> UIImage? {
-        return imgCache[name]
+        return cache.object(forKey: NSString(string: name))
     }
 }
